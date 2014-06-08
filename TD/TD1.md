@@ -51,124 +51,124 @@ Premiere page HTML creee dynamiquement
 Afficher les informations du serveur
 ------------------------------------
 
- `#!/bin/sh 
- echo 'Content-Type: text/html; charset=utf-8'
- echo
- echo '<html><head>'
- echo '<title> Afficher les informations connues du serveur</title>'
- echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
- echo '</head>'
- echo '<body>'
- echo 'Je suis le script <strong>' 
- echo $SCRIPT_NAME 
- echo '</strong>'
- echo ' servi par <strong>' $SERVER_SOFTWARE '</strong>'
- echo ' pour <strong>' $HTTP_USER_AGENT '</strong>'
- echo '</body></html>' `
+     #!/bin/sh 
+     echo 'Content-Type: text/html; charset=utf-8'
+     echo
+     echo '<html><head>'
+     echo '<title> Afficher les informations connues du serveur</title>'
+     echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
+     echo '</head>'
+     echo '<body>'
+     echo 'Je suis le script <strong>' 
+     echo $SCRIPT_NAME 
+     echo '</strong>'
+     echo ' servi par <strong>' $SERVER_SOFTWARE '</strong>'
+     echo ' pour <strong>' $HTTP_USER_AGENT '</strong>'
+     echo '</body></html>'
 
 Table de quelques variables du serveur
 --------------------------------------
 
-`#!/bin/sh 
- echo 'Content-Type: text/html; charset=utf-8'
- echo
- echo '<html><head>'
- echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
- echo '<title> Table des variables du serveur</title>'
- echo '</head>'
- echo '<body>'
- echo '<table summary="Table des principales variables du serveur">’ 
- echo '<caption> Table des variables du serveur</caption>'
- echo '<tr><th>Nom</th><th>Valeur</th></tr>'
- echo '<tr><td>SERVER_NAME</td><td>'$SERVER_NAME'</td></tr>'
- echo '<tr><td>SERVER_SOFTWARE</td><td>'$SERVER_SOFTWARE'</td></tr>'
- echo '<tr><td>SERVER_ADDR</td><td>'$SERVER_ADDR'</td></tr>'
- echo '<tr><td>REMOTE_PORT</td><td>'$REMOTE_PORT'</td></tr>'
- echo '<tr><td>REMOTE_ADDR</td><td>'$REMOTE_ADDR'</td></tr>'
- echo '</table>' 
- echo '</body></html>'`
+     #!/bin/sh 
+     echo 'Content-Type: text/html; charset=utf-8'
+     echo
+     echo '<html><head>'
+     echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
+     echo '<title> Table des variables du serveur</title>'
+     echo '</head>'
+     echo '<body>'
+     echo '<table summary="Table des principales variables du serveur">’ 
+     echo '<caption> Table des variables du serveur</caption>'
+     echo '<tr><th>Nom</th><th>Valeur</th></tr>'
+     echo '<tr><td>SERVER_NAME</td><td>'$SERVER_NAME'</td></tr>'
+     echo '<tr><td>SERVER_SOFTWARE</td><td>'$SERVER_SOFTWARE'</td></tr>'
+     echo '<tr><td>SERVER_ADDR</td><td>'$SERVER_ADDR'</td></tr>'
+     echo '<tr><td>REMOTE_PORT</td><td>'$REMOTE_PORT'</td></tr>'
+     echo '<tr><td>REMOTE_ADDR</td><td>'$REMOTE_ADDR'</td></tr>'
+     echo '</table>' 
+     echo '</body></html>'
 
 La multiplication des td
 ------------------------
 
-`#!/bin/sh 
- echo 'Content-Type: text/html; charset=utf-8'
- echo
- echo '<html><head>'
- echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
- echo '<title>Tables de multiplication par 2</title>'
- echo '</head><body>' 
- echo '<table summary="Table de multiplication par 2 sur 2 colonnes">'
- echo '<caption>Table de 2</caption>'
- echo '<tr><th>x</th><th>2x</th></tr>'
- i=0
- while [ $i -lt 10 ]
- do
- echo "<tr><td>" $i "</td><td>" $(($i*2)) "</td></tr>" 
- i=$((i+1))
- done
- echo '</table></body></html>'`
+     #!/bin/sh 
+     echo 'Content-Type: text/html; charset=utf-8'
+     echo
+     echo '<html><head>'
+     echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
+     echo '<title>Tables de multiplication par 2</title>'
+     echo '</head><body>' 
+     echo '<table summary="Table de multiplication par 2 sur 2 colonnes">'
+     echo '<caption>Table de 2</caption>'
+     echo '<tr><th>x</th><th>2x</th></tr>'
+     i=0
+     while [ $i -lt 10 ]
+     do
+     echo "<tr><td>" $i "</td><td>" $(($i*2)) "</td></tr>" 
+     i=$((i+1))
+     done
+     echo '</table></body></html>'
 
 La stylisation des td
 ---------------------
 
-`#!/bin/sh 
- echo 'Content-Type: text/html; charset=utf-8'
- echo
- echo '<html><head>'
- echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
- echo '<title>Tables de multiplication par 2</title>'
- echo '</head><body>' 
- echo '<table summary="Table de multiplication par 2 sur 2 colonnes">'
- echo '<caption>Table de 2</caption>'
- echo '<tr><th>x</th><th>2x</th></tr>'
- i=0
- while [ $i -lt 10 ]
- do
- if [ $((i % 2)) -eq 0 ]
- then
- color='#777'
- else
- color='#111'
- fi
- echo "<tr style='background-color:$color'><td>$i</td><td>" 
- echo $(($i*2))
- echo "</td></tr>" 
- i=$((i+1))
- done
- echo '</table></body></html>'`
+     #!/bin/sh 
+     echo 'Content-Type: text/html; charset=utf-8'
+     echo
+     echo '<html><head>'
+     echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
+     echo '<title>Tables de multiplication par 2</title>'
+     echo '</head><body>' 
+     echo '<table summary="Table de multiplication par 2 sur 2 colonnes">'
+     echo '<caption>Table de 2</caption>'
+     echo '<tr><th>x</th><th>2x</th></tr>'
+     i=0
+     while [ $i -lt 10 ]
+     do
+     if [ $((i % 2)) -eq 0 ]
+     then
+     color='#777'
+     else
+     color='#111'
+     fi
+     echo "<tr style='background-color:$color'><td>$i</td><td>" 
+     echo $(($i*2))
+     echo "</td></tr>" 
+     i=$((i+1))
+     done
+     echo '</table></body></html>'
 
 La division des td
 ------------------
 
-`#!/bin/sh 
- echo 'Content-Type: text/html; charset=utf-8'
- echo
- echo '<html><head>'
- echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
- echo '<title>Tables de multiplication par 2 sur 10 lignes</title>'
- echo '</head><body>' 
- echo '<table summary="Table de 2 sur 10 colonnes">'
- echo '<caption>Table de 2</caption>'
+     #!/bin/sh 
+     echo 'Content-Type: text/html; charset=utf-8'
+     echo
+     echo '<html><head>'
+     echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
+     echo '<title>Tables de multiplication par 2 sur 10 lignes</title>'
+     echo '</head><body>' 
+     echo '<table summary="Table de 2 sur 10 colonnes">'
+     echo '<caption>Table de 2</caption>'
 
- # Première ligne
- echo "<tr><th>x</th>"
- i=0
- while [ $i -lt 10 ]
- do
- echo "<td>" $i "</td>"
- i=$((i+1))
- done
- echo "</tr>"
+     # Première ligne
+     echo "<tr><th>x</th>"
+     i=0
+     while [ $i -lt 10 ]
+     do
+     echo "<td>" $i "</td>"
+     i=$((i+1))
+     done
+     echo "</tr>"
 
- # Deuxième ligne
+     # Deuxième ligne
 
- echo '<tr><th>2x</th>'
- i=0
- while [ $i -lt 10 ]
- do
- echo "<td>" $((2*$i)) "</td>"
- i=$((i+1))
- done
- echo "</tr>"
- echo '</table></body></html>'`
+     echo '<tr><th>2x</th>'
+     i=0
+     while [ $i -lt 10 ]
+     do
+     echo "<td>" $((2*$i)) "</td>"
+     i=$((i+1))
+     done
+     echo "</tr>"
+     echo '</table></body></html>'
