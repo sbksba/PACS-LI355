@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" 
+        "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Créneau dans ICS</title>
+  <script type='text/javascript'>
+    var ok = true;
+    function controle_jour(input) {
+    if (!/^ *[0-9]{8} *$/.test(input.value)) {
+       alert('jour incorrect: ' +  input.value);
+       ok = false;
+      }
+    }
+    function controle_heure(input) {
+    if (!/^ *[0-9]{6} *$/.test(input.value)) {
+       alert('heure incorrecte: ' + input.value);
+       ok = false;
+      }
+    }
+    function controle_ics(form) {
+      if (!ok) return false;
+      if (form.elements['fin'].value <= form.elements['debut'].value) {
+        alert('fin avant debut ');
+        return false;
+      }
+      return true;
+    }
+    function init_ics() {
+      var d = new Date();
+      var m = d.getMonth()+1;
+      if (m < 10) m = '0' + m;
+      var j = d.getDate();
+      if (j < 10) j = '0' + j;
+      document.getElementById('jour').value = d.getFullYear() + m + d.getDate();
+      document.getElementById('ICS').focus();
+  }
+  </script> 
+  </head> 
+  <body onload="init_ics()">
+    <h1>Créneau dans ICS</h1> 
+    <form action="creneau_ics.php" method="post" enctype="multipart/form-data"
+	  onsubmit='return controle_ics(this)'>
+      <fieldset>
+	<label for='jour'>Jour </label>
+	<input name='jour' id='jour' onblur='controle_jour(this)'>
+	<label for='debut'>Commencement </label>
+	<input name='debut' id='debut' value='120000' onblur='controle_heure(this)'>
+	<label for='fin'>Fin </label>
+	<input name='fin' id='fin' value='130000' onblur='controle_heure(this)'>
+      </fieldset>
+      <fieldset>
+	<label for='ICS'>Agenda </label><input type='file' name='ICS' id='ICS'/>
+	<input type='submit' value='Demander ce rendez-vous' />
+    </fieldset>
+    </form> 
+  </body> 
+</html>

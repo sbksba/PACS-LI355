@@ -1,0 +1,131 @@
+Commande Telnet
+===============
+
+Il faut écrire <tt>open</tt>{ machine port}.
+
+Protocole HTTP et Telnet
+========================
+
+Le document renvoyé est de type HTML. 
+C'est le même que celui renvoyé lorsqu'on écrit
+http://127.0.0.1
+dans la barre de navigation.
+
+Le code de retour est 302, indiquant une redirection. 
+Celle-ci est indiquée dans l'en-tête <tt>Location</tt>.
+Elle est due au fait que l'URL donnée ne se termine pas par /
+mais indique pourtant  un répertoire, non un fichier.
+
+Lorsqu'on demande l'URL indiquée par l'en-tête <tt>Location</tt>
+on obtient la liste des entrées de son répertoire <tt>public_html</tt>.
+Le navigateur a donc immédiatement opéré la redirection.
+
+Le fichier reçu par telnet contient les en-têtes HTTP
+que la navigateur a interprété sans les montrer explicitement.
+
+Visualiser les en-tetes
+=======================
+
+<?php
+include 'entete.php';
+
+function getentetes($serveur, $port, $ressource)
+{
+  $d=@fsockopen($serveur,$port);
+  if (!$d)
+      return ($serveur . " sur le port " . $port . " ne répond pas.");
+  else
+      {
+    fputs($d, "GET http://$serveur$ressource HTTP/1.1\nHost: $serveur\n\n");
+    $status = fgets($d,4096);
+    $reponse = array('status' => $status);
+    while (strlen($l = fgets($d,4096)) > 2) {
+      if (preg_match('@([^:]+): +(.*)$@', $l, $x))
+        $reponse[$x[1]] = $x[2];
+    }
+    fclose($d);
+    return $reponse;
+      }
+}
+
+function arrayEnTableHTML($t){
+  $r = "";
+  $i = 0;
+  foreach ($t as $k => $v){
+    $i++;
+    $color = ($i%2) ? '#777' : '#aaa';
+    $r .= "\n<tr style='background-color:$color'><td>"
+      . htmlspecialchars($k)
+      . '</td><td>' 
+      . htmlspecialchars($v)
+      . "</td></tr>\n";
+  }
+  return "<table>\n<tr><th>Nom</th><th>Valeur</th></tr>\n$r</table>\n";
+}
+
+if (!isset($_GET['url']) OR
+    !preg_match(',^(https?)://([^/:]*)(:\d+)?(.*)$,',$_GET['url'],$r))
+  {echo "Argument 'url' incorrect";}
+ else {
+   list(, $schema, $serveur, $port, $ressource) = $r;
+   if (!$port) $port = ($schema == 'http') ?  80 : 443;
+   $r = getentetes($serveur, $port, $ressource);
+   if (!is_array($r))
+     echo $r;
+   else {
+     include "entete.php";
+     error_reporting(E_ALL);
+     echo DOCTYPE_XHTML_BASIC_11, "\n";
+     echo HTML_FR, "\n";
+     echo "<head>\n";
+     echo META_TYPE_TEXT_HTML_UTF8, "\n";
+     echo "<title>Date du jour</title>\n";
+     echo "</head>\n<body>\n";
+     echo arrayEnTableHTML($r);
+     echo "</body></html>\n";
+   }
+ }
+?> 
+
+Firebug & Web Developer
+=======================
+
+{Question 1:}
+Menu {Informations}. 11 en-têtes.
+{Keep-Alive: timeout=15}, donc 15 secondes.  
+
+{Question 2:}
+Menu {Cookies}. Un cookie est posé si on est passé par {Accès authentifié}.
+
+{Question 3:}
+Menu {Informations/Links}.
+Il y a 356 liens, certains active les pseudo protocoles {mailto}
+et {webcal}. La plupart permettent des affichages différents de l'emploi du temps.
+
+{Question 4:}
+Menu {Images/Attribut Alt}.
+Toutes les icones ont un attribut  Alt, ainsi que les petits carrés.
+
+{Question 5:}
+Menu {Forms}. Un seul formulaire, la recherche.
+
+{Question 6:}
+Menu {CC / Display CSS by MediaType / Print}.    
+
+{Question 7:}
+Menu {CSS / Edit CSS}
+montre 4 onglets de éditions.  
+
+{Question 8:}
+Il indique la taille et le temps de chargement.
+
+{Question 9:}
+En cliquant sur les petits triangles on voit les en-têtes HTTP pour les feuilles de styles.
+
+{Question 10:}
+Sur la gauche le système de cascades de styles est exemplifié.
+
+{Question 11:}
+WebDeveloper insère des attributs {class}
+pour provoquer un affichage différent.
+

@@ -1,0 +1,72 @@
+/* main items */
+ul {
+ width: 10em;
+ text-align: center;
+ /* aucun cadrage pour que le changement de couleur occupe toute la case */
+ padding: 0;
+}
+/* si on survole une sous-liste on l'affiche */
+ul li:hover ul { display: block; }
+
+/* sinon ne l'affiche pas, mais on specifie le reste */
+ul ul {
+ /* sous-listes pas affichees au depart */
+ display: none;
+ /* mais on prepare leur position */
+ position: absolute;
+ /* revenir en haut du cadre du parent, bordure comprise */
+ margin-top: -2.1em; 
+ /* sauter le cadre du parent sauf la bordure:
+ /* si on laisse de l'espace entre, le :hover ne sera plus actif
+ /* et le menu lateral s'effacera avant d'etre atteint */
+ margin-left: 9.9em;
+ /* pas de cadrage ni de point pour les items */
+ padding: 0;
+ list-style-type: none;
+ /* caracteristiques arbitraires */
+ width: 10em;
+ border: 0.1em solid gray;
+ background-color: #e19d2a;
+}
+ul li {
+ border: 0.1em solid gray;
+ /* elargir le cadre sans recourir a Padding, cf ci-dessus */ 
+ line-height: 2em;
+}
+ul li a {
+ /* occuper tout l'espace */
+ display: block;
+ /* le souligne est pour les incultes en typographie */
+ text-decoration: none;
+ color: rgb(60, 0, 0);
+}
+
+/* colorer les zones de clics au survol */
+ul li a:hover { 
+ color: rgb(51, 102, 102);
+ background-color: #c5701f;
+}
+
+ /* comme ci-dessus, mais en plus petit et sans bordure */
+ul ul li { 
+ border: none;
+ line-height: 1.5em;
+}
+
+ul ul li a {
+ display: block;
+ color: black;
+}
+ul ul li a:hover {
+ color: rgb(255, 255, 204);
+}
+
+/* sous-sous-listes, toujours agir sur Display */
+ul li:hover ul li ul { display: none; }
+/* Attention le rectangle est plus petit, et bordure initiale deja sautee  */
+ul li:hover ul li:hover ul {
+    display: block;
+    position: absolute;
+    margin-top: -1.6em; 
+    margin-left: 10em;
+}

@@ -1,0 +1,1 @@
+Il faut écrire <tt>open</tt>{ machine port}.

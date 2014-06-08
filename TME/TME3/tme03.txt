@@ -1,0 +1,666 @@
+Rappels sur les tableaux associatifs
+====================================
+
+<?php
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+
+echo entete("Tableaux");
+echo "<body>\n";
+
+$fruits = array("banane","pomme","litchie");
+$fruits2 = array("banane"=>150,"pomme"=>300,"litchie"=>30);
+
+
+echo '<h1>Avec une boucle for()</h1>';
+echo "<ul>\n";
+for ($i=0; $i <3; $i++){
+        echo "<li>" . $fruits[$i] . "</li>\n";
+}
+echo "</ul>\n";
+
+
+echo '<h1>Avec une boucle while()</h1>';
+$i = 0;
+echo "<ul>\n";
+while ($i <3){
+        echo "<li>" . $fruits[$i] . "</li>\n";
+        $i++;
+}
+echo "</ul>\n";
+
+
+//Pour l'affichage avec la boucle foreach on peut réutiliser
+//la fonction array_to_list vu en TD 2
+include('../../TD/2/array_to.php');
+echo '<h1>Avec une boucle foreach()</h1>';
+echo array_to_list($fruits);
+
+
+/*Pour l'affichage avec la boucle foreach on peut réutiliser
+la fonction arrayEnTableHTML vu en TD 3 qui se trouve dans 
+le fichier ShowForm.php*/
+include('../../TD/3/ShowForm.php');
+echo '<h1>Calories</h1>';
+echo "<h2>Tri par valeurs de calories croissantes</h2>\n";
+asort($fruits2);
+echo arrayEnTableHTML($fruits2, "Table tri&eacute;e par valeur");
+
+echo '<h2>Tri par noms de fruits</h2>';
+ksort($fruits2);
+echo arrayEnTableHTML($fruits2, "Table tri&eacute;e par clef");
+
+
+echo '</body></html>';
+?>
+
+Envoi controle du numero
+========================
+
+<?php
+define('MAX_ID',12);
+
+require_once('../2/entete.php');
+
+function creerForm($val='') {
+  return
+    "<form action='' method='get'><fieldset>\n" .
+    "<label>Numero de groupe : </label>\n" .
+    "<input type='text' name='etu_id' value='$val' />\n" .
+    "<input type='submit' />\n" .
+    "</fieldset></form>\n";
+}
+
+
+echo entete("Saisir Notes");
+echo "<body>\n";
+
+if ( empty($_GET)  ) {
+  echo creerForm();
+} else {
+  if ( isset($_GET['etu_id']) ) {
+    $num = intval($_GET['etu_id']);
+    if (!$num) {
+      echo '<div>Le groupe ne peut etre vide</div>';
+    } else if ( $num > MAX_ID  ) {
+      echo '<div>Numero de groupe trop grand</div>';
+    }
+    echo creerForm($num);
+  }
+}
+
+echo "</body></html>";
+
+?> 
+
+Collecte des notes
+==================
+
+ <?php
+define('MAX_ID',2);
+require_once('../2/entete.php');
+global $etudiants;
+$etudiants = array(
+              array('bob', 'john'),                // groupe 1
+              array('alice','bob','stef','arthur') // groupe 2
+            ); 
+
+function creerForm($val='') {
+  return
+    "<form action='' method='get'><fieldset>\n" .
+    "<label>Numero de groupe : </label>\n" .
+    "<input type='text' name='etu_id' value='$val' />\n" .
+    "<input type='submit' />\n" .
+    "</fieldset></form>\n";
+}
+
+//$n étant le numéro du groupe
+function creerFormEtudiants($n) {
+       global $etudiants;
+       $grp = $etudiants[$n-1];
+       $form='';
+       for ($i=0;$i<count($grp);$i++) {
+               $form .= "<div><label for='etu$i'>Etudiant ".$grp[$i]." </label>"
+               . "<input type='text' name='etu$i' id='etu$i' /></div>\n";
+       }
+       return "<form action='notesEntrees.php' method='post'><fieldset>\n" .
+     $form .
+     "<input type='hidden' name='grp' value='$n' />\n" .
+     "<input type='submit' />\n</fieldset></form>\n";
+}
+
+
+echo entete("Saisir Notes");
+echo "<body>\n";
+
+if ( empty($_GET)  ) {
+       echo creerForm();
+} else {
+       if ( isset($_GET['etu_id']) ) {
+               $num = intval($_GET['etu_id']);
+               if ( !$num) {
+                       echo '<div>Le groupe ne peut etre nul</div>';
+                       echo creerForm();
+               } else if ($num > MAX_ID  ) {
+                       echo '<div>Numero de groupe trop grand</div>';
+                       echo creerForm();
+               } else {
+                       echo creerFormEtudiants($num);
+               }
+       }
+}
+
+echo "</body>\n</html>";
+?> 
+
+Recuperation des donnees par GET
+================================
+
+<?php 
+/***********************************************************************
+ *  Quelques précisions concernant cet exercice. Le formulaire à créer 
+ *  doit contenir un champ de saisi "numéro étudiant" et un autre champ 
+ *  de sélection (1..N) pour le numéro du groupe TD "TD". N étant le 
+ *  nombre de groupes de TD. Les données sont à soumettre avec la méthode 
+ *  GET. 
+ *
+ * */  
+
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+require_once('utilitaires.php');
+
+echo entete("Inscription");
+
+echo "<body>\n";
+
+echo '<h1>QUERY_STRING </h1>';
+
+echo $_SERVER['QUERY_STRING'];
+
+echo '<h1>$_GET </h1>';
+
+echo arrayEnTableHTML($_GET);
+
+?>
+</body>
+</html>
+
+<?php
+// Deuxieme version
+// la génération du formulaire est intégrée dans le script qui le traite
+
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+require_once('utilitaires.php');
+
+echo entete("Inscription") . "\n<body>\n";
+
+// le formulaire html
+function genereFormulaire($nbreTD){
+ $ch = "<option value='TD?'>TD?</option>\n";
+
+ for ($i=1; $i<=$nbreTD; $i++){
+   $ch .="<option>TD$i</option>\n";
+ }
+ 
+ return "<h1>Inscription</h1>\n" .
+   "<form action=''><fieldset>\n" .
+   "<label for='numero'>Identifiant : </label>\n" .
+   "<input type='text' name='numero' id='numero'/>\n" .
+   "<label for='td'> Groupe de TD :</label>\n" .
+   "<select id='td' name='TD'>\n" .
+   $ch .
+   "</select>\n" .
+   "<p><input type='submit' name ='envoi' value='Envoyer' /></p>\n" .
+   "</fieldset></form>\n";
+}
+
+if (!isset($_GET["envoi"])) { //envoi du formulaire pour la première fois
+  echo 'Valeur de !isset($_GET["envoi"] : ' .!isset($_GET["envoi"])."<br/>\n";
+  echo  "Premier envoi du formulaire";
+  echo genereFormulaire(10);
+  }
+
+else { // le formulaire a déjà été envoyé
+
+ // Quelles données ai-je reçues ?
+ echo '<h1> Contenu de $_GET </h1>'."\n";
+ echo arrayEnTableHTML($_GET);
+
+ // Je vérifie que le champ des données n'est pas vide
+ if (!empty($_GET["numero"]) && ($_GET["TD"] <> "TD?")){
+     echo "Enregistrement de la demande d'inscription <br/>\n";
+     echo "L'inscription de ".$_GET["numero"]." faite";
+ }
+ else {
+
+   if (empty ($_GET["numero"]))
+     echo "Vous avez omis de rentrer l'<strong>identifiant</strong><p/>";
+
+   if (empty ($_GET["TD"]) OR (!intval($_GET["TD"])))
+     echo "Vous avez omis de rentrer le <strong>TD</strong><p/>";
+
+   echo genereFormulaire(10);
+ }
+
+}//fin du else indiquant que le formulaire a bien été envoyé
+/*
+Pour en faire plus, vous pouvez améliorer le programme précédent :
+- en travaillant, non pas sur deux champs, mais sur une dizaine de champs ;
+- en travaillant sur un formulaire où des champs doivent être obligatoirement 
+  remplis et d&#8217;autres non ;
+- si, le formulaire doit être reproposé car des champs n&#8217;ont pas été remplis, 
+les champs, qui ont eux été correctement remplis, restent remplis avec la 
+valeur initiale.
+*/
+?>
+</body>
+</html>
+
+Mise a jour d un fichier
+========================
+
+<?php
+/********************************************************************
+ * Quelques précisions concernant cet exercice. On suppose que le fichier 
+ * à lire est un fichier texte de plusieurs lignes ou chaque ligne contient
+ * le couple numéroEtudiant numéroTD (avec l'espace séparant le numéro étudiant 
+ * et le numéro TD) 
+ *
+ * */   
+
+//Question 1
+function tabFromFich($nomFich) {
+    /*La fonction "file" fait que les éléments du tableau $lignes sont 
+      des chaînes terminées par "\n".*/
+   
+  $lignes = is_readable($nomFich) ? file($nomFich) : array(); 
+
+  // Il faut supprimer ces caractères parasites
+   
+  for ($i = 0; $i < count($lignes); $i++ ) {
+       $lignes[$i] = rtrim($lignes[$i]);
+   }
+   
+   /* Il faut décomposer chaque ligne en un tableau à deux éléments 
+      (ici appelé $tabligne). On peut alors inscrire le couple clef-valeur 
+      dans le tableau associatif  $clefVal créé pour l'occasion. 
+   */
+  $clefVal = array();
+   foreach ( $lignes as $lg ) {
+        $tabligne = explode(" ", $lg);
+        $clefVal[$tabligne[0]] = $tabligne[1];
+   }
+
+   // et on renvoie comme valeur le tableau $Clef_Val  rempli.
+   return $clefVal;
+} // fin du texte de la fonction tabFromFich
+
+//Question 2
+function TDdeEtudiant($nomFichier, $numeroEtudiant){
+  $tabClefVal = tabFromFich($nomFichier);
+  if($tabClefVal[$numeroEtudiant])
+    return $tabClefVal[$numeroEtudiant];
+  else
+    return 0;
+}
+
+//Question 3
+function ajoutEnFinFile($nomFich,$nuEtu, $TD){
+   $lignes = is_readable($nomFich) ? file($nomFich) : array(); 
+   $lignes[count($lignes)]=$nuEtu." ".$TD."\n";
+   $fichier =@fopen($nomFich,"w");
+   foreach ($lignes as $lg){
+     fputs($fichier, $lg);
+   }
+   fclose($fichier);
+}//fin du texte de ajoutEnFinFile
+
+// Pour tester l'ajout dans le fichier des inscrits:
+
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+require_once('utilitaires.php');
+
+echo entete("MAJ Fichier");
+
+define ("FICHIER_ETUDIANTS", "etudiants.txt");
+
+echo "<body>\n"."<h1> Etat initial </h1>\n";
+echo arrayEnTableHTML(tabFromFich("fichierInscrits.txt"));
+
+echo "<h1>Insertions</h1>"; 
+for ($i=0; $i<5;$i++){
+       $nuEtu="";
+       for ($j=0;$j<7;$j++) $nuEtu=$nuEtu.rand(0,9);
+       $TD="TD".rand(1,4);
+       echo "<p>Etudiant : ", $nuEtu, " inscrit dans le ", $TD, "</p>\n";
+       ajoutEnFinFile("fichierInscrits.txt",$nuEtu,$TD);
+}
+echo "<h1> Etat final </h1>"; 
+echo arrayEnTableHTML(tabFromFich("fichierInscrits.txt"));
+echo "</body></html>\n";
+?>
+
+<?php
+// Deuxieme version du fichier Inscrire Etudiant
+// MAJ du fichier d'étudiants
+
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+require_once('utilitaires.php');
+include "MAJFichier.php"; 
+
+echo entete("Inscription") . "\n<body>\n";
+
+// le formulaire html
+function genereFormulaire($nbreTD){
+ $ch = "<option value='TD?'>TD?</option>\n";
+
+ for ($i=1; $i<=$nbreTD; $i++){
+   $ch .="<option>TD$i</option>\n";
+ }
+ 
+ return "<h1>Inscription</h1>\n" .
+   "<form action=''><fieldset>\n" .
+   "<label for='numero'>Identifiant : </label>\n" .
+   "<input type='text' name='numero' id='numero'/>\n" .
+   "<label for='td'> Groupe de TD :</label>\n" .
+   "<select id='td' name='TD'>\n" .
+   $ch .
+   "</select>\n" .
+   "<p><input type='submit' name ='envoi' value='Envoyer' /></p>\n" .
+   "</fieldset></form>\n";
+}
+
+if (!isset($_GET["envoi"])) { //envoi du formulaire pour la première fois
+  echo 'Valeur de !isset($_GET["envoi"] : ' .!isset($_GET["envoi"])."<br/>\n";
+  echo  "Premier envoi du formulaire";
+  echo genereFormulaire(10);
+  }
+
+else { // le formulaire a déjà été envoyé
+
+ // Quelles données ai-je reçues ?
+ echo '<h1> Contenu de $_GET </h1>'."\n";
+ echo arrayEnTableHTML($_GET);
+
+ // Je vérifie que le champ des données n'est pas vide
+ if (!empty($_GET["numero"]) && ($_GET["TD"] <> "TD?")){
+     $numEtu = $_GET["numero"];
+     $numTD  = $_GET["TD"];
+     
+     if(TDdeEtudiant(FICHIER_ETUDIANTS, $numEtu)){
+      echo "<p> Etudiant déjà inscrit</p>";
+     }else{
+      ajoutEnFinFile(FICHIER_ETUDIANTS, $numEtu, $numTD);
+     }
+ }
+ else {
+
+   if (empty ($_GET["numero"]))
+     echo "<p>Vous avez omis de rentrer l'<strong>identifiant</strong></p>";
+
+   if (empty ($_GET["TD"]) OR (!intval($_GET["TD"])))
+     echo "<p>Vous avez omis de rentrer le <strong>TD</strong><p>";
+
+   echo genereFormulaire(10);
+ }
+
+}
+
+Methode POST
+============
+
+<?php
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+
+echo entete("Soumission de TME");
+
+echo   "<body>\n";
+?>
+  <h1> Soumettre un TME </h1>
+    <form action="" method="post">
+      <fieldset>
+        <label for="numero">Numéro de carte</label>
+        <input type="text" name="numero" id="numero">
+  
+        <label for="mail">Mail</label>
+        <input type="text" name="mail" id="mail">
+  
+        <label for="envoiMail">Envoi par mail</label>
+        <input type="checkbox" name="envoiMail" id="envoiMail">
+  
+        <label for="soumission">Soumission</label>
+        <input type="checkbox" name="soumission" id="soumission">
+        
+        <input type="submit" value="Envoyer">
+      </fieldset>
+    </form>
+</body>
+</html> 
+
+Recuperation des donnees par POST
+=================================
+
+<?php
+/******************************************************************************
+ *  Quelques précisions concernant cet exercice.
+ *  Pour tester le bon fonctionnement
+ *  de ce script il faut inclure le formulaire créé dans l'exercice précédent. 
+ *
+ * */   
+
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+require_once('utilitaires.php');
+
+echo entete("Informations Etudiant");
+
+echo "<body>\n";
+;
+?>
+
+<h1> Données par $_POST </h1>
+
+<?php  echo arrayEnTableHTML($_POST); ?>
+
+</body>
+</html>
+
+
+<?php
+/*********************************************************************************
+ * Réponse à la deuxième question
+ *
+ * */  
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+require_once('utilitaires.php');
+
+echo entete("Informations Etudiant");
+
+echo "<body>\n";
+
+// Je vérifie que le champ des données n'est pas vide 
+// (remplissage formulaire valide)
+if (!empty($_POST["numero"]) && !empty($_POST["mail"]) && 
+    (!empty($_POST["envoiMail"]) || !empty($_POST["soumission"]))) {
+     echo "j'ai bien enregistré la demande d'inscription <br/>\n";
+     echo "L'inscription de l'étudiant ",
+       $_POST["numero"],
+       " va être enregistrée";
+}else{ //remplissage formulaire non valide, alors le réafficher
+   echo "<form action = 'inscrireEtudiant2.php' method='post'><fieldset>\n",
+    "<label for='i1'> Numéro de la carte d'étudiant :</label>\n",
+    "<input type='text' name ='numero' id='i1' />\n",
+    "<label for='i2'> Mail :</label>\n",
+    "<input type='text' name ='mail' id='i2' />\n",
+    "<label for='i3'> Envoi par mail :</label>\n",
+    "<input type='checkbox' name='envoiMail' id='i3' />\n",
+    "<label for='i4'> Soumission :</label>\n",
+    "<input type='checkbox' name='soumission' id='i4' />\n",
+    "<input type='submit' value='Envoyer' />\n",
+        "</fieldset></form>";  
+ }
+?>
+</body>
+</html> 
+
+Recuperer un fichier envoye
+===========================
+
+<?php
+// Après avoir récupéré le nom du TD associé à l'étudiant, 
+// il faut rajouter dans le script "envoiFichier.php" la ligne suivante,
+// permetttant de ranger le fichier dans un repertoire non temporaire: 
+
+  move_uploaded_file ($_FILES["fichier"]["tmp_name"], "./TD?/".$_FILES["fichier"]["name"]);
+  
+  //Envoi par mail
+  $contenuFichier = file_get_contents($_FILES["fichier"]["tmp_name"]);
+  if($contenuFichier)
+    mail("email@domain.tld", "Subject", $contenuFichier);
+    /* La fonction mail permet d'envoyer un e-mail. 
+      Attention, pour que cette fonction marche il 
+      faut installer un serveur mail et configurer 
+      l'interprete php pour qu'il l'utilise. */
+?> 
+
+Liste de selection dans un formulaire
+=====================================
+
+<?php
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+
+function afficheCouleur($couleur){
+  $c = (strcmp($couleur,"Rouge") == 0) ? "#ff0000"
+  :   ((strcmp($couleur,"Vert") == 0) ? "#00ff00"
+       :   ((strcmp($couleur,"Bleu") == 0) ? "#0000ff"
+        :   ((strcmp($couleur,"Jaune") == 0) ? "#ffff00"
+         :   ((strcmp($couleur,"Noir") == 0) ? "#000000" 
+              :   "#888888")))); // Par défaut couleur "gris"
+
+  return "<div style='height:10px;width:10px;background-color:$c'>&nbsp;</div>";
+}
+
+echo entete("Couleurs");
+
+echo "<body>\n";
+
+if (isset($_POST["couleurs"])){
+    foreach ($_POST["couleurs"] as $coul){
+        // echo "<div>$coul</div>"; // Question 3
+        echo afficheCouleur($coul); // Question 5
+    }
+}
+?>
+<h1>Sélection de couleur</h1>
+<form action="" method="post">
+    <select multiple="multiple" name="couleurs[]" size="4">
+        <option>Rouge</option>
+        <option selected="selected">Vert</option><!-- Question 2 -->
+        <option>Bleu</option>
+        <option>Jaune</option>
+        <option disabled="disabled">Noir</option>
+        <option>Gris</option>
+    </select>
+    <input type="submit" name="sub-mite" value="Afficher les couleurs !"/>
+</form>
+</body>
+</html> 
+
+Gestion des notes des etudiants
+===============================
+
+<?php
+// entrerNotes.php
+
+define("NBTD", 24);
+$listeEtudiantsTDn=array("Dupond","Dupont","Castafiore","Haddock","Hergé",
+"Milou","Tintin","Tournesol");
+
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+require_once('utilitaires.php');
+
+echo entete("Entrer Notes");
+
+echo   "<body>\n"."<h1>Notes entr&eacute;es</h1>\n";
+
+if (!isset($_GET["td"]) ||  ($_GET["td"]=="") || ($_GET["td"]> NBTD)) {
+     #echo "vous avez peut-être oublié d'envoyer le formulaire"."\n";
+     #echo "ou vous avez oublié de rentrer le numéro d'un TD"."\n";
+     #echo "ou le TD ".$_GET['td']." n'existe pas"."\n";
+    echo '<form action="entrerNotes.php" method="get">';
+    echo 'groupe de TD ? <input type="text" size ="2" name="td"> <br />';
+    echo '<input type="submit" value="Envoyer"> <br />';
+    echo '</form>';
+  }
+  else {
+    echo '<form action="notesEntrees.php" method="post"><br />'."\n";
+    echo '<table border="1">';
+    echo '<tr> <th>Nom</th><th>Note</th></tr>';
+    for ($i=0; $i<count($listeEtudiantsTDn); $i++) {
+      echo '<tr><td><input type="text" size ="10" name="etu[]" value="';
+      echo $listeEtudiantsTDn[$i]. '">';
+      echo '</td><td> <input type="text" size ="5" name="note[]">';
+      echo '</td></tr><br />',"\n";
+    }
+    echo '</table>';
+    echo '<input type="submit" value="Envoyer"> <br />';   
+    echo '<form>';
+  }
+?>
+</body>
+</html>
+
+<?php
+//notesEntrees.php
+
+error_reporting(E_ALL);
+require_once('../2/entete.php');
+require_once('utilitaires.php');
+
+define("RE_VALIDER_NOTE", "/^(([0-1]?[0-9]) | 20)(\.(25|50|5|75))?$/");
+
+echo entete("Notes entr&eacute;es") . "<body>\n";
+?>
+<table><tr> <th>Nom</th><th>Note</th></tr>
+<?php
+  function noteValide($note){
+    return preg_match(RE_VALIDER_NOTE,$note); 
+  }
+  
+  $ch=""; 
+  $som=0;
+  $nbrEtu=0;
+  for ($i=0; $i<count($_POST["etu"]); $i++) {
+    echo '<tr><td>'. $_POST["etu"][$i];
+    echo '</td><td>'.$_POST["note"][$i].'</td></tr><br />'."\n";
+    if (!($_POST["note"][$i]=="")) {
+      if  (noteValide($_POST["note"][$i])){
+      $som=$som + $_POST["note"][$i];
+      $nbrEtu=$nbrEtu+1;
+      }
+      else {
+    $ch.="La note ". $_POST["note"][$i]. " de l'étudiant ".$_POST["etu"][$i] ;
+    $ch.=" n'est pas valide"."<br />";
+      }
+    }
+  }
+  echo '</table>';
+  if ($nbrEtu==0){
+    echo "Aucun étudiant n'a de note"."<br />";
+  }
+  else {
+    echo "<br />"."Moyenne obtenue :". ($som/$nbrEtu)."<br />"."<br />";
+  }
+  echo $ch;
+?>
+</body>
+</html> 
+

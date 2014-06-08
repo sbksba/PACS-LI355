@@ -1,0 +1,153 @@
+Fusion de calendriers
+=====================
+
+ <?php 
+
+function fusionne_ics($f1, $f2) 
+{ 
+ $f1 = file($f1); 
+
+//suppression du END:VCALENDAR
+ array_pop($f1); 
+
+ $f2 = file($f2);
+
+ //suppression du BEGIN:VCALENDAR
+ array_shift($f2); 
+
+ //suppression du debut jusqu'au premier BEGIN
+ while (!preg_match("/^BEGIN:/",$f2[0])){
+   array_shift($f2);
+ }
+
+ return array_merge($f1, $f2); 
+}
+?> 
+
+Transmission de calendriers
+===========================
+
+<?php
+
+function envoi_ics($ics, $nom)
+{
+  // header("Content-Type: text/plain"); // pour mise au point
+
+  header("Content-Type: text/calendar; charset=UTF-8");
+  header("Content-Transfer-Encoding: 8bit");
+  header('Content-Disposition: inline; filename="'.
+     $nom .
+     '"; creation-date="' .
+     gmdate("D, d M Y H:i:s", time()));
+
+  foreach($ics as $ligne) echo $ligne;
+}
+?>
+
+Envoi d'un calendrier
+=====================
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" 
+        "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Transmission de calendriers </title></head> 
+  <body> 
+  <form action="fournir_ics.php" method="post" enctype="multipart/form-data"> 
+  <fieldset>
+  <label for='ics1'>Premier fichier ICS</label>
+  <input type='file' name='ics1' id='ics1' />
+  <label for='ics2'>Premier fichier ICS</label>
+  <input type='file' name='ics2' id='ics2' />
+  <input type='submit' value='Fusionne'  /> 
+  </fieldset>
+  </form> 
+  </body> 
+</html>
+<?php
+} else {
+  include 'envoi_ics.php';
+  include 'fusionne_ics.php';
+  $res = fusionne_ics($_FILES["ics1"]["tmp_name"], $_FILES["ics2"]["tmp_name"]);
+  envoi_ics($res, 'fusion.ics');
+}
+?>
+
+Demande de rendez-vous
+======================
+
+ <?php
+
+if (($_SERVER['REQUEST_METHOD'] == 'GET') OR !isset($_FILES["ICS"]["tmp_name"]))
+  { ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" 
+        "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Créneau dans ICS</title>
+  </head> 
+  <body>
+    <h1>Créneau dans ICS</h1> 
+    <form action="creneau_ics.php" method="post" enctype="multipart/form-data">
+      <fieldset>
+    <label for='jour'>Jour </label><input name='jour' id='jour'>
+    <label for='debut'>Commencement </label><input name='debut' id='debut' />
+    <label for='fin'>Fin </label><input name='fin' id='fin'/>
+      </fieldset>
+      <fieldset>
+    <label for='ICS'>Agenda </label><input type='file' name='ICS' id='ICS'/>
+    <input type='submit' value='Demander ce rendez-vous' />
+    </fieldset>
+    </form> 
+  </body> 
+</html>
+
+<?php } else {
+    function creneau($f1,$rdvd,$rdvf,$jour){ 
+      foreach ($f1 as $l) { 
+        if (preg_match("/^DTSTART.*:".$jour."T(.*)$/",$l,$a)){
+          $debut = $a[1];
+        }else{
+          if (preg_match("/^DTEND.*:".$jour."T(.*)$/",$l,$a)){ 
+        $fin = $a[1]; 
+        if ((($fin > $rdvd) && ($fin < $rdvf)) 
+            || (($debut > $rdvd) && ($debut < $rdvf)) 
+            || (($debut < $rdvd) && ($fin > $rdvd))){
+          return false; 
+        } 
+          } 
+        }
+      }
+      return true; 
+    }
+
+ $debut = $_POST['debut'];
+ $fin = $_POST['fin'];
+ $jour = $_POST['jour'];
+ $file = file($_FILES["ICS"]["tmp_name"]);
+
+ if (!creneau($file, $debut, $fin, $jour)) {
+    header('Content-Type: text/plain; charset=utf-8');
+    echo 'Pas libre';
+  } else{
+  header("Content-Type: text/calendar; charset=utf-8");
+  header("Content-Transfer-Encoding: 8bit");
+  header('Content-Disposition: inline; filename="'.
+     $_FILES["ICS"]["name"] . '.ics' .
+     '"; creation-date="' .
+     gmdate("D, d M Y H:i:s", time()));
+  while(true) {$last = array_shift($file); if ($file) echo $last; else break;}
+  echo "BEGIN:VEVENT\n";
+  echo "DESCRIPTION: RDV\n";
+  echo "DTSTART;TZID=Europe/PariS:$jour". 'T' . $debut . "\n";
+  echo "DTEND;TZID=Europe/Paris:$jour". 'T' . $fin . "\n";
+  echo "END:VEVENT\n";
+  echo $last;
+ }
+}
+?> 
+

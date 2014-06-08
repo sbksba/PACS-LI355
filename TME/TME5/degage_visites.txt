@@ -1,0 +1,6 @@
+Il faut sauver la page HTML dans fichier,
+ puis l'éditer pour en retirer la balise Input de type Hidden. 
+Selon la manière dont le formulaire a été écrit,
+le champ Action de la balise Form peut être vide, 
+auquel cas il faut l'initialiser avec l'URL de la page HTML initiale
+(i.e. l'URL du script PHP). 

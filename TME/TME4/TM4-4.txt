@@ -1,0 +1,38 @@
+{Question 1:}
+Menu {Informations}. 11 en-têtes.
+{Keep-Alive: timeout=15}, donc 15 secondes.  
+
+{Question 2:}
+Menu {Cookies}. Un cookie est posé si on est passé par {Accès authentifié}.
+
+{Question 3:}
+Menu {Informations/Links}.
+Il y a 356 liens, certains active les pseudo protocoles {mailto}
+et {webcal}. La plupart permettent des affichages différents de l'emploi du temps.
+
+{Question 4:}
+Menu {Images/Attribut Alt}.
+Toutes les icones ont un attribut  Alt, ainsi que les petits carrés.
+
+{Question 5:}
+Menu {Forms}. Un seul formulaire, la recherche.
+
+{Question 6:}
+Menu {CC / Display CSS by MediaType / Print}.    
+
+{Question 7:}
+Menu {CSS / Edit CSS}
+montre 4 onglets de éditions.  
+
+{Question 8:}
+Il indique la taille et le temps de chargement.
+
+{Question 9:}
+En cliquant sur les petits triangles on voit les en-têtes HTTP pour les feuilles de styles.
+
+{Question 10:}
+Sur la gauche le système de cascades de styles est exemplifié.
+
+{Question 11:}
+WebDeveloper insère des attributs {class}
+pour provoquer un affichage différent.

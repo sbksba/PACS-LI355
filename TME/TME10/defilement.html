@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="fr" lang="fr" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>PACS TME 10 Exercice 3</title>
+<script type="text/javascript">
+images = ["../8/detoure.jpg", "../8/gnu.png"];
+function Activer () {
+  if (images.length > last) {
+	last = (last+1) % images.length;
+	document.getElementById('image').src = images[last];
+	setTimeout(function () {Activer()}, 300);
+  }
+}
+
+function Arreter() {
+  last = images.length;
+}
+</script>
+</head>
+<body><div>
+  <button onclick="last = 0;Activer()">Activer</button>
+  <button onclick="Arreter()">Arreter</button>
+  <img id='image' src='' alt=''  />
+</div></body>
+</html>

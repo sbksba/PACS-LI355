@@ -1,0 +1,16 @@
+Le document renvoyé est de type HTML. 
+C'est le même que celui renvoyé lorsqu'on écrit
+http://127.0.0.1
+dans la barre de navigation.
+
+Le code de retour est 302, indiquant une redirection. 
+Celle-ci est indiquée dans l'en-tête <tt>Location</tt>.
+Elle est due au fait que l'URL donnée ne se termine pas par /
+mais indique pourtant  un répertoire, non un fichier.
+
+Lorsqu'on demande l'URL indiquée par l'en-tête <tt>Location</tt>
+on obtient la liste des entrées de son répertoire <tt>public_html</tt>.
+Le navigateur a donc immédiatement opéré la redirection.
+
+Le fichier reçu par telnet contient les en-têtes HTTP
+que la navigateur a interprété sans les montrer explicitement.

@@ -1,0 +1,29 @@
+<html>
+<head>
+<script type="text/javascript">
+
+function init(){
+    nbadeviner = Math.floor(Math.random()*10+1);
+}
+
+function controler(input){
+    n = input.value;
+    if (isNaN(n))
+         alert( " Farceur, ce n'est pas un nombre !");
+    else  if (n == nbadeviner) {
+         alert( "gagné");
+    } else if (n <  nbadeviner)
+              alert("C'est plus");
+          else 
+              alert("C'est moins");
+}
+</script>
+</head>
+<body onload="init();">
+<h1> Deviner un Nombre </h1>
+<form onsubmit='return false'>
+<label for='elnb'>Saisir votre proposition</label>
+<input id="nb"  onchange="controler(this)" />
+</form>
+</body>
+</html>

@@ -1,0 +1,124 @@
+En tete HTML
+============
+
+<?php
+function entete($title) {
+  return
+    "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML Basic 1.1//EN'
+        'http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd'>\n" .
+    "<html xmlns='http://www.w3.org/1999/xhtml' lang='fr'>\n" .
+    "<head>\n" .
+    "<meta http-equiv='Content-Type' content='text/html;charset=utf-8' />\n" .
+    "<title>" . 
+    $title .
+    "</title>\n" .
+    "</head>\n";
+}
+// test
+// echo entete('test'), '<body><div>test</div></body></html>';
+?>
+
+Metissage PHP/HTML
+==================
+
+<?php
+include "entete.php";
+error_reporting(E_ALL);
+echo entete("Date du jour");
+?>
+<body>
+<h1><?php echo date("d M Y"); ?></h1>
+</body></html>
+
+Les informations disponibles
+============================
+
+<?php phpinfo()
+
+// 1. 5.3.26
+// 2. Build Date    Jul 7 2013 18:20:06
+// 3. $_SERVER indiquee en fin de page
+ ?>
+
+Mise en table HTML de tableaux PHP
+==================================
+
+<?php
+
+function tableau_en_table($t, $caption, $sum='', $width='100%')
+{
+  if (!$t) return '';
+  $i = 0;
+  $chaine = '';
+  foreach ($t as $k => $v) {
+    $c = ($i%2) ? '#eee' : '#ddd';
+    $chaine .= "<tr style='background-color:$c'><td>$k</td><td>$v</td></tr>\n";
+    $i++;
+  }
+  $h = "<tr style='background-color:#777'><th>Index</th><th>Valeur</th></tr>\n";
+  $c = "<caption style='background-color:#aaa'>$caption</caption>";
+  return "<table style='width:$width' summary='$sum'>$c$h$chaine$h</table>";
+}
+// Test
+// include('entete.php');
+// echo entete('Les Variables du serveur');
+// echo tableau_en_table($_SERVER, 'Les Variables du serveur');
+?>
+
+Expressions rationnelles statiques
+==================================
+
+<?php
+
+define('RE_SECUSOC', '/\b[12]\d{13}\b/');
+define('RE_HORAIRES', "/([0-1][0-9]|2[0-3]):([0-5][0-9])/");
+define('RE_MAILETU', '/[a-z\'-]+@etu\.upmc\.fr/i');
+define('RE_NOTE', "@\b([0-9]|1[0-9]|20)(/20)?\b@");
+
+function listeOccurrences($regexp, $texte){
+        if (preg_match_all($regexp, $texte, $res)){
+      return tableau_en_table($res[0], "$regexp $texte");
+        } return "<div>$texte ne correspond pas au motif $regexp</div>";
+}
+
+define('TEST_SECUSOC', '12345678901234 02345678901234 123456789012345');
+define('TEST_HORAIRES', "12:34, 05:18 et 23:14 et ensuite une heure erronée 77:17");
+define('TEST_MAILETU', "l'elu@etu.upmc.fr saint-eloi@etu.upmc.fr faux@etu_umpc_fr");
+define('TEST_NOTE', "20, 18/20 et 7/20 7.5");
+
+// test
+//include('entete.php');
+//include('tableau_en_table.php');
+// echo entete('Expressions rationnelles statiques');
+// echo listeOccurrences(RE_SECUSOC, TEST_SECUSOC);
+// echo listeOccurrences(RE_HORAIRES, TEST_HORAIRES);
+// echo listeOccurrences(RE_MAILETU, TEST_MAILETU);
+// echo listeOccurrences(RE_NOTE, TEST_NOTE);
+// echo listeOccurrences(RE_NOTE, '21');
+?>
+
+Expressions rationnelles dynamiques
+===================================
+
+<?php
+
+function message_erreur($s, $IP, $mois=''){
+  $mip = str_replace('.', '\\.', $IP);
+  if (!intval($mois)) $mois = @date('M');
+  $re = "/$mois \d+ (..:..:..) 20..\] \[error\] \[client $mip\](.+)/";
+  $n = preg_match_all($re, $s,$m,  PREG_SET_ORDER);
+  if (!$n) return "<div>Rien vu.\n</div>";
+  $sol = array();
+  foreach($m as $v) $sol[$v[1]] = $v[2];
+  return tableau_en_table($sol, "$mois $IP", "$n erreurs");
+}
+// Test
+// error_reporting(E_ALL);
+// $chaine=file_get_contents("/var/log/apache2/error_log");
+// include('entete.php');
+// include('tableau_en_table.php');
+// echo entete('Les erreurs du serveur');
+// echo '<body>';
+// echo message_erreur($chaine, '127.0.0.1');
+// echo '</body></html>';
+?>

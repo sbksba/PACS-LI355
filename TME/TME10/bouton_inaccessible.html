@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="fr" lang="fr" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Un bouton inaccessible</title>
+<script type="text/javascript">
+top = 5;
+left = 5;
+
+function bouger(div){
+     dx = Math.random()*100;
+     dy = Math.random()*100;
+     top = (top + dx)%20;
+     div.style.top = top +"em" ;
+     left = (left + dy)%20;
+     div.style.left= left +"em" ;
+}
+
+function merci(rep){
+     alert("Merci d'avoir dit " + rep);
+}
+</script>
+</head>
+<body>
+<h1>Aimez-vous cet exercice ?</h1>
+<form action=''><fieldset style='width: 7em'>
+<input type="button" value="OUI" onclick="merci(this.value);" />
+<div style="position: absolute; left: 5em; top: 5em; margin-top: 0.4em"
+     onmouseover="bouger(this);" >
+     <input type="button" value="NON" onclick="merci(this.value);" />
+</div>
+</fieldset></form>
+</body>
+</html>

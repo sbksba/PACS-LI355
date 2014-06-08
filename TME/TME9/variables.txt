@@ -1,0 +1,42 @@
+- Question 1 : types de variables en Javascript :
+
+-# boolean (variable true/false), 
+-# string (variable de chaîne de caractères), 
+-# number (variable numérique), 
+-# function (fonction). 
+-# object (objet),
+-# undefined (type indéterminé)
+
+------------------------------------------------------------------
+- Question 2 : le programme affiche le résultat suivant :
+
+5 // 3 + 2 <br/>
+32 // 3 + "2" <br/>
+NaN // 3 + s avec s vide <br/>
+5 // 3 + 2 avec s = 2 (et non pas "2") <br/>
+3hello // 3 + "hello" <br/>
+
+------------------------------------------------------------------
+- Question 3 et 4 : fonction {toNumber()} et {add()} :
+
+<code>
+function toNumber(x){ 
+ return (isNaN(x))? NaN : Number(x); 
+}
+
+function add(a,b){ 
+    return toNumber(a) + toNumber(b); 
+}
+</code>
+
+------------------------------------------------------------------
+- Question 5 : fonction {eval()} :
+
+<code>
+var a, b, c;
+var code="a= 3+3; b=Math.floor(13.5);c=add(a,b);"; 
+eval(code); 
+document.write ("a : " + a + "<br>");
+document.write ("b : " + b + "<br>");
+document.write ("c : " + c + "<br>");
+</code>

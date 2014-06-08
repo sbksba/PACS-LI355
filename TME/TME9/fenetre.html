@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>Ouvrir une fenêtre</title>
+  </head>
+  <body><div><a href='qui-suis-je.html'
+	   onclick="fen = window.open(this.href, 
+				'',
+				'width=900,height=200,toolbar=no');
+			return false">Cliquer ici pour ouvrir</a><br />
+	<a onclick='if (fen) fen.close()'>Cliquer ici pour fermer</a>
+  </div></body>
+</html>
+

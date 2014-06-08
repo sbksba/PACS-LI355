@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>Informations issues du navigateur</title>
+    <script type="text/javascript"><!--
+      info = new Array(
+	"Code du Navigateur : " + navigator.appCodeName,
+	"Nom du Navigateur : " + navigator.appName,
+	"Version Navigateur : " + navigator.appVersion,
+	"Description du Navigateur : " + navigator.userAgent,
+	"Date de modification : " + document.lastModified,
+	"URL : " + document.location,
+	"URL d'origine : " + document.referrer
+	);
+     --></script>
+  </head>
+  <body onload='alert(info.join("\n"))'><script type="text/javascript"><!--
+	document.writeln('<ul><li>'+ info.join("</li>\n<li>") + '</li></ul>')
+	// --></script></body>
+</html>
